@@ -147,6 +147,13 @@ H3 采样器新增可选参数，旧工作流保持原有默认行为。
 - 仍然拒绝视频局部保留、音频局部/软遮罩，以及尚未验证的其他遮罩组合。
 - 新增分块拼接、完整音频保留、H3 音频遮罩传递、非法组合和无遮罩路径测试。
 
+## 示例工作流
+
+- [H3+selflift-avatar-fixed.json](example_workflows/H3+selflift-avatar-fixed.json)
+- [示例工作流说明](example_workflows/README.md)
+
+该工作流默认使用 `global_stream`、`highres_token_chunk=4096`、`highres_weight_cache_gb=4`。模型权重不包含在仓库中；运行前请替换 `LoadImage` 节点的本地参考图，并安装工作流中使用的自定义节点。
+
 ## Demo
 
 [![H3 音频驱动 Demo 预览](docs/assets/demo-preview.gif)](https://github.com/slmonker/selflift-Avatar/releases/download/v0.1.2-experimental/selfliftAvatar_00011-audio.mp4)

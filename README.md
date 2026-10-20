@@ -145,6 +145,13 @@ Overlap remains automatic; these controls do not change the latent upscaler's te
 - Keeps rejecting partial video preservation, partial/soft audio masks, and other mask combinations that have not been validated with tiling.
 - Adds tests for tile stitching, full-audio preservation, H3 audio mask forwarding, invalid mask combinations, and the no-mask path.
 
+## Example workflows
+
+- [H3+selflift-avatar-fixed.json](example_workflows/H3+selflift-avatar-fixed.json)
+- [Example workflow notes](example_workflows/README.md)
+
+The workflow uses `global_stream`, `highres_token_chunk=4096`, and `highres_weight_cache_gb=4` by default. Model weights are not included; replace the local reference image in the `LoadImage` node and install the custom nodes used by the workflow before running.
+
 ## Demo
 
 [![H3 audio-driven demo preview](docs/assets/demo-preview.gif)](https://github.com/slmonker/selflift-Avatar/releases/download/v0.1.2-experimental/selfliftAvatar_00011-audio.mp4)

@@ -44,5 +44,8 @@
     "h3_ram_attention.py": "68babb9c5489999b9eb70a18d11ed7899aacc922369e4e23a9fedc8cc160d645",
     "h3_output_chunking.py": "cabcfaeca389d13d8bacc9eb65a24febc59451f9a9b5296e514062250047fddc",
     "h3_prepared_weights.py": "51b0cfb1e7dcab736124a6d47fd793a6234030a01033b65ad51e844ebe2368b9"
+  },
+  "example_workflow_sha256": {
+    "example_workflows/H3+selflift-avatar-fixed.json": "f9bf1dec530dfaf5c7960b36a7fe64aa5c10681c159933be7d4051e0ffc54603"
   }
 }

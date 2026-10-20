@@ -11,6 +11,7 @@
 - If TST or another attention override is active, automatically fall back to full-sequence dense attention with chunked MLP instead of raising.
 - Remove only the ComfyUI dense attention backend selector for the fallback path; TST/Motion Context overrides are preserved.
 - Fix compatibility with ComfyUI H3 versions that do not expose `MiniMaxH3Model._embed_and_pack`.
+- Add `example_workflows/H3+selflift-avatar-fixed.json`, a working `global_stream` example with the new controls and sanitized local paths.
 - 75 CPU tests pass, including the existing workspace-regression tests; both stub-frontend suites pass. Real H3 GPU quality/VRAM verification remains required.
 - Special thanks to [Fish4AI](https://github.com/Fish4AI) and the [comfyui-SelfLift-Fish](https://github.com/Fish4AI/comfyui-SelfLift-Fish) project for the global-context implementation this work builds on.
 
