@@ -40,3 +40,11 @@ maintainer's H3 setup.
 - The workflow uses a `global_stream` configuration, but the actual path is
   shown in the node status panel and the console. Do not judge the result from
   the first high-resolution preview alone; let all high-resolution steps finish.
+
+## Credits
+
+Special thanks to [Fish4AI](https://github.com/Fish4AI), author of
+[comfyui-SelfLift-Fish](https://github.com/Fish4AI/comfyui-SelfLift-Fish).
+The full-sequence global-context implementation used by this workflow is
+adapted from that project and integrated with selflift-Avatar's masks and node
+wiring. Thanks also to facok for the original comfyui-SelfLift project.

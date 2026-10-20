@@ -57,6 +57,8 @@
 
 ## 主分支更新：全局上下文省显存（2026-10-20）
 
+> 全局上下文省显存实现基于 [Fish4AI](https://github.com/Fish4AI) 的 [comfyui-SelfLift-Fish](https://github.com/Fish4AI/comfyui-SelfLift-Fish)，特别感谢作者的公开工作。
+
 这一版新增了 `spatial`、`global_stream`、`global`、`global_ram` 四种高分辨率省显存模式。旧工作流默认仍是 `spatial`，不会自动改变行为。
 
 ### 新增参数

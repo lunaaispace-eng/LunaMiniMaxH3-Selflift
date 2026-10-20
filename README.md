@@ -57,6 +57,8 @@ This update is available from the repository's `main` branch. The existing `v0.1
 
 ## Main-branch update: global-context memory saving (2026-10-20)
 
+> The global-context memory-saving implementation is based on [Fish4AI](https://github.com/Fish4AI)'s [comfyui-SelfLift-Fish](https://github.com/Fish4AI/comfyui-SelfLift-Fish). Special thanks to the author for publishing this work.
+
 This update adds four high-resolution memory-saving modes: `spatial`, `global_stream`, `global`, and `global_ram`. Existing workflows still default to `spatial`.
 
 ### New parameters
