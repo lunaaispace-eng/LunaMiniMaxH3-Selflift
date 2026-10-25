@@ -1,10 +1,23 @@
 # selflift-Avatar
 
-**Development: `main` (global-context memory saving)** · **Packaged release: `v0.1.4-experimental`** · [中文说明](README_CN.md) · [Changelog](CHANGELOG.md) · [v0.1.4 release](https://github.com/slmonker/selflift-Avatar/releases/tag/v0.1.4-experimental)
+**Development: `main` (global-context memory saving + long-clip upscaler fix)** · **Packaged release: `v0.1.4-experimental`** · [中文说明](README_CN.md) · [Changelog](CHANGELOG.md) · [v0.1.4 release](https://github.com/slmonker/selflift-Avatar/releases/tag/v0.1.4-experimental)
 
 An independent experimental SelfLift branch for ComfyUI / MiniMax H3. It focuses on H3 audio-video latent masks, preserving source audio during sampling, and high-resolution spatial tiling / global-context memory saving. It registers separate node IDs, so it can coexist with the original SelfLift plugin.
 
 > **Experimental, unofficial project.** The current code has passed 80 CPU tests and two frontend suites with stubs. Earlier versions were exercised in the maintainer's H3 workflow; the new controls still need broader real-model and frontend testing. This is not a systematic benchmark of lip-sync accuracy, speed, or every model/plugin combination. Results can vary by character, audio, prompt, sampler, latent upscaler, and seed.
+
+## Main-branch fix: long-clip latent upscaler frame-0 artifact (2026-10-25)
+
+Fixes [#5](https://github.com/slmonker/selflift-Avatar/issues/5): with a learned H3 latent upscaler, long clips could develop invented content at frame 0, including a visible grid-aligned block of glyph-like bars on some seeds.
+
+- **Trigger:** the learned latent upscaler's temporal chunk path, used when the video latent has more than 32 frames. Short clips and `upscaler_model=none` do not take this path. The artifact is deterministic for a given seed but only becomes visible on some images.
+- **Cause:** temporal halos used `replicate` padding. With a 5-frame overlap, H3's causal first latent frame became six identical frames. The upscaler's temporal convolutions and whole-window GroupNorm reacted to that static boundary context and could invent high-resolution detail.
+- **Fix:** temporal halos now use `reflect` padding. For unusual custom upscaler models where the temporal overlap is not smaller than the latent length, the previous `replicate` behavior remains as a fallback instead of raising.
+- **Compatibility:** clips with `T <= 32` keep the unchanged unpadded path. For long clips, only the first and last temporal windows can change; interior frames outside those windows are byte-for-byte unchanged. Audio, masks, tiling, sampling, node schemas and frontend behavior are not modified.
+- **Update:** update to the current `main` branch and restart the ComfyUI backend. No workflow or parameter change is required.
+- **Validation:** 80 CPU tests and both frontend suites pass. Five new regression tests cover reflect padding, the short-clip no-pad path, oversized-overlap fallback, long-clip boundary behavior and unchanged interior frames. A real `minimax_h3_latent_upscaler_3d_conv_v1_bf16` A/B reduced synthetic frame-0 residual max from 13.46 (`replicate`) to 1.01 (`reflect`), versus 0.92 for the full-sequence reference. The reporter's before/after images also show the glyph-like block removed at the same seed.
+
+This fix is available on `main` and is included in the current development branch. The packaged `v0.1.4-experimental` archive is unchanged and does **not** include it.
 
 ## Main-branch fix: expired model references during tiling (2026-10-09)
 

@@ -1,10 +1,23 @@
 # selflift-Avatar
 
-**开发版：`main`（全局上下文省显存）** · **已打包版本：`v0.1.4-experimental`** · [English README](README.md) · [更新记录](CHANGELOG.md) · [v0.1.4 发布页](https://github.com/slmonker/selflift-Avatar/releases/tag/v0.1.4-experimental)
+**开发版：`main`（全局上下文省显存 + 长视频 latent upscaler 修复）** · **已打包版本：`v0.1.4-experimental`** · [English README](README.md) · [更新记录](CHANGELOG.md) · [v0.1.4 发布页](https://github.com/slmonker/selflift-Avatar/releases/tag/v0.1.4-experimental)
 
 这是一个面向 ComfyUI / MiniMax H3 的 SelfLift 独立实验分支，重点处理 H3 音视频 latent 遮罩、采样过程中的原始音频保留，以及高分辨率空间分块 / 全局上下文省显存。它使用独立的节点 ID，可以和原版 SelfLift 共存。
 
 > **实验版本，非官方项目。** 当前代码已通过 80 项 CPU 测试和两套模拟前端测试。此前版本已在维护者的 H3 工作流中试用；新控件仍需更多真实模型与前端测试。尚未进行系统性的口型准确率、速度和所有模型/插件组合测试。不同角色、音频、提示词、采样器、latent upscaler 和 seed 可能产生不同结果。
+
+## 主分支修复：长视频 latent upscaler 首帧伪影（2026-10-25）
+
+修复 [#5](https://github.com/slmonker/selflift-Avatar/issues/5)：使用学习型 H3 latent upscaler 时，长视频首帧可能生成原本不存在的内容，部分 seed 会在地面上出现明显、锁定 16 px 网格的金色符号状条块。
+
+- **触发条件：**仅发生在学习型 latent upscaler 的时间分块路径，即视频 latent 超过 32 帧时。5 秒以内短片以及 `upscaler_model=none` 不经过该路径。伪影在同一 seed 下具有确定性，但只有部分画面会明显显现。
+- **原因：**时间 halo 使用 `replicate` padding；在 5 帧 overlap 下，H3 因果 VAE 的首个 latent 帧被扩展成连续 6 帧静止画面。Upscaler 的时间卷积和整窗 GroupNorm 对这种边界分布产生反应，并可能在后续高清阶段放大成可见内容。
+- **修复方式：**时间 halo 改用 `reflect` padding。对于极少数自定义 upscaler 模型，如果时间 overlap 不小于 latent 长度、无法使用 reflect，则保留原来的 `replicate` 回退，避免新增报错。
+- **兼容范围：**`T <= 32` 的短片仍走原来的无 padding 路径。长视频只可能改变最前和最后的时间窗口；这些窗口之外的中间帧逐元素保持不变。音频、遮罩、分块、采样、节点接口和前端行为均未修改。
+- **更新方法：**更新到当前 `main` 分支并重启 ComfyUI 后端，无需修改工作流或参数。
+- **验证范围：**80 项 CPU 测试及两套前端测试通过。新增 5 项回归测试，覆盖 reflect padding、短片无 padding 路径、overlap 过大回退、长视频边界行为和中间帧不变。使用真实 `minimax_h3_latent_upscaler_3d_conv_v1_bf16` 做 A/B：合成输入的首帧残差最大值从 `replicate` 的 13.46 降至 `reflect` 的 1.01，不分块参考值为 0.92。报告者提供的同 seed 前后对比图也显示符号状条块消失。
+
+本修复已在 `main` 提供，并包含当前开发版。已打包的 `v0.1.4-experimental` 压缩包保持不变，**不包含此修复**。
 
 ## 主分支修复：高分辨率分块遇到失效模型引用时报错（2026-10-09）
 
