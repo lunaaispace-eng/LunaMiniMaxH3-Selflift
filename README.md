@@ -1,4 +1,4 @@
-# LunaMiniMaxH3-Selflift
+# Luna-H3-Selflift
 
 **Development: `main` (global-context memory saving + long-clip upscaler fix)** · **Packaged release: `v0.1.4-experimental`** · [中文说明](README_CN.md) · [Changelog](CHANGELOG.md) · [v0.1.4 release](https://github.com/slmonker/selflift-Avatar/releases/tag/v0.1.4-experimental)
 
